@@ -28,7 +28,6 @@ namespace WaterCoolerAPI.Controllers
     /// </summary>
     [Route(HttpRouteConstants.ApiControllerRoute)]
     [ApiController]
-    [Authorize]
     [EnableCors(Constants.CORSAllowAllPolicy)]
     public class RoomDataController : ControllerBase
     {
