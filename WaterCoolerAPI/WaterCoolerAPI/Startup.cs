@@ -9,6 +9,7 @@ namespace WaterCoolerAPI
     using Microsoft.AspNetCore.Authentication.JwtBearer;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
+    using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Hosting;
@@ -68,6 +69,13 @@ namespace WaterCoolerAPI
                     // tables exist.
                     repositoryOptions.EnsureTableExists = true;
                 });
+
+            // Setup SPA static files.
+            // In production, the React files will be served from this directory.
+            services.AddSpaStaticFiles(configuration =>
+            {
+                configuration.RootPath = "WaterCoolerClientApp/build";
+            });
 
             services.AddSingleton<IGraphLogger>(this.logger)
                 .AddAuthentication(sharedOptions =>
@@ -131,7 +139,7 @@ namespace WaterCoolerAPI
             app.UseHttpsRedirection();
 
             app.UseStaticFiles();
-
+            app.UseSpaStaticFiles();
             app.UseRouting();
 
             app.UseCors(Constants.CORSAllowAllPolicy);
@@ -142,6 +150,16 @@ namespace WaterCoolerAPI
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+            });
+
+            app.UseSpa(spa =>
+            {
+                spa.Options.SourcePath = "WaterCoolerClientApp";
+
+                if (env.IsDevelopment())
+                {
+                    spa.UseReactDevelopmentServer(npmScript: "start");
+                }
             });
         }
     }
