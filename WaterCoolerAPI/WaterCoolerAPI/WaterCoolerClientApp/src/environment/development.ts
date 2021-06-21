@@ -1,1 +1,1 @@
-export const devBaseUrl = 'https://watercooler-test-api-westus.azurewebsites.net'
+export const devBaseUrl = window.location.origin;
